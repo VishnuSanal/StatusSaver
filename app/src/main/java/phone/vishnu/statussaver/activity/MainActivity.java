@@ -1,8 +1,8 @@
-package phone.vishnu.statussaver;
+package phone.vishnu.statussaver.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +12,8 @@ import android.view.MenuItem;
 import java.io.File;
 import java.util.ArrayList;
 
+import phone.vishnu.statussaver.adapter.RecyclerViewAdapter;
+import phone.vishnu.statussaver.fragments.AboutFragment;
 import vishnu.statussaver.R;
 
 public class MainActivity extends AppCompatActivity {
@@ -69,8 +71,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.about) {
-            Intent intent = new Intent(this, Main3Activity.class);
-            startActivity(intent);
+            AboutFragment fragment = AboutFragment.newInstance();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .add(R.id.constraintLayout, fragment)
+                    .addToBackStack(null)
+                    .commit();
         } else if (item.getItemId() == R.id.refresh) {
             setUpRecyclerView();
         }

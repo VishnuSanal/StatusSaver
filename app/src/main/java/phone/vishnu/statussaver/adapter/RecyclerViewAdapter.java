@@ -1,4 +1,4 @@
-package phone.vishnu.statussaver;
+package phone.vishnu.statussaver.adapter;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -17,9 +17,7 @@ import android.widget.Toast;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import vishnu.statussaver.R;
@@ -27,12 +25,12 @@ import vishnu.statussaver.R;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
     private final Context context;
-    int lastInt;
+    private int lastInt;
     private SharedPreferences prefs = null;
     private ImageView imageView;
     private ArrayList<String> arr;
 
-    RecyclerViewAdapter(Context context, ArrayList<String> arr) {
+    public RecyclerViewAdapter(Context context, ArrayList<String> arr) {
         this.context = context;
         this.arr = arr;
     }
@@ -84,15 +82,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     private void generateNoteOnSD(Context context, Bitmap image) {
         File root = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "StatusSaver");
-        if (!root.exists()) {
-            root.mkdirs();
-        }
+
+        if (!root.exists()) root.mkdirs();
 
         prefs = context.getSharedPreferences("phone.vishnu.statussaver", Context.MODE_PRIVATE);
 
         lastInt = (prefs.getInt("number", 0)) + 1;
 
-        String file = root.toString() + File.separator + "StatusSaver" + String.valueOf(lastInt) + ".jpg";
+        String file = root.toString() + File.separator + "StatusSaver" + lastInt + ".jpg";
 
         SharedPreferences.Editor editor = prefs.edit();
         editor.putInt("number", lastInt);
@@ -107,10 +104,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             fOutputStream.flush();
             fOutputStream.close();
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            Toast.makeText(context, "Save Failed", Toast.LENGTH_SHORT).show();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(context, "Save Failed", Toast.LENGTH_SHORT).show();
         }

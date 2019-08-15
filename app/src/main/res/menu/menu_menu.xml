@@ -2,15 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
-        android:id="@+id/about"
-        app:showAsAction="never"
-        android:title="@string/about" />
 
     <item
         android:id="@+id/refresh"
-        app:showAsAction="ifRoom"
         android:icon="@drawable/ic_refresh_black_24dp"
-        android:title="@string/refresh" />
+        android:title="@string/refresh"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/about"
+        android:icon="@drawable/ic_info_outline"
+        android:title="@string/about"
+        app:showAsAction="ifRoom" />
 
 </menu>
