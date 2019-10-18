@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -60,7 +61,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 alert.setPositiveButton("Save", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        generateNoteOnSD(context, myBitmap);
+
+                        AsyncTask.execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                generateNoteOnSD(context, myBitmap);
+                            }
+                        });
+
                     }
                 });
                 alert.setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
