@@ -2,19 +2,21 @@ package phone.vishnu.statussaver.activity;
 
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
 import java.util.ArrayList;
 
+import phone.vishnu.statussaver.R;
 import phone.vishnu.statussaver.adapter.RecyclerViewAdapter;
 import phone.vishnu.statussaver.fragments.AboutFragment;
-import vishnu.statussaver.R;
+
 
 public class MainActivity extends AppCompatActivity {
 
