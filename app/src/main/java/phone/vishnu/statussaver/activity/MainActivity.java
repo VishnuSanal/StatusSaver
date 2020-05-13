@@ -1,12 +1,17 @@
 package phone.vishnu.statussaver.activity;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,33 +20,44 @@ import java.util.ArrayList;
 
 import phone.vishnu.statussaver.R;
 import phone.vishnu.statussaver.adapter.RecyclerViewAdapter;
-import phone.vishnu.statussaver.fragments.AboutFragment;
-
 
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mRecyclerView = findViewById(R.id.recyclerView);
+
+        askForPermission();
         setUpRecyclerView();
+    }
+
+    private void askForPermission() {
+        int PERMISSION_REQ_CODE = 222;
+
+        if (Build.VERSION.SDK_INT >= 22) {
+            if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    Toast.makeText(MainActivity.this, "Please Accept Required Permission", Toast.LENGTH_SHORT).show();
+                }
+                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQ_CODE);
+            }
+        }
+
     }
 
     private void setUpRecyclerView() {
         mRecyclerView.setHasFixedSize(true);
 
-        mLayoutManager = new GridLayoutManager(this, 2);
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new RecyclerViewAdapter(this, FetchImages());
+        RecyclerView.Adapter mAdapter = new RecyclerViewAdapter(this, FetchImages());
         mRecyclerView.setAdapter(mAdapter);
     }
-
 
     private ArrayList<String> FetchImages() {
 
@@ -52,15 +68,14 @@ public class MainActivity extends AppCompatActivity {
         File directory = new File(path);
         File[] files = directory.listFiles();
 
+        assert files != null;
         for (File file : files) {
 
             if (file.getName().toLowerCase().endsWith(".jpg")) {
-
                 String file_name = file.getPath();
                 filenames.add(file_name);
             }
         }
-
         return filenames;
     }
 
@@ -73,12 +88,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.about) {
-            AboutFragment fragment = AboutFragment.newInstance();
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                    .add(R.id.constraintLayout, fragment)
-                    .addToBackStack(null)
-                    .commit();
+            Toast.makeText(this, "Coming Soon!", Toast.LENGTH_SHORT).show();
         } else if (item.getItemId() == R.id.refresh) {
             setUpRecyclerView();
         }

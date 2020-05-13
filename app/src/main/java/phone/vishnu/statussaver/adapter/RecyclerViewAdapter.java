@@ -6,17 +6,14 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
+import android.media.MediaScannerConnection;
 import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.BufferedOutputStream;
@@ -30,8 +27,6 @@ import phone.vishnu.statussaver.R;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
     private final Context context;
-    private int lastInt;
-    private SharedPreferences prefs = null;
     private ImageView imageView;
     private ArrayList<String> arr;
 
@@ -50,7 +45,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         holder.setIsRecyclable(false);
-
+//TODO:Do Hover
         final Bitmap myBitmap = BitmapFactory.decodeFile(arr.get(position));
         imageView.setImageBitmap(myBitmap);
 
@@ -66,12 +61,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
-                        AsyncTask.execute(new Runnable() {
+                        new Thread(new Runnable() {
                             @Override
                             public void run() {
                                 generateNoteOnSD(context, myBitmap);
                             }
-                        });
+                        }).start();
 
                     }
                 });
@@ -97,31 +92,23 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         if (!root.exists()) root.mkdirs();
 
-        prefs = context.getSharedPreferences("phone.vishnu.statussaver", Context.MODE_PRIVATE);
-
-        lastInt = (prefs.getInt("number", 0)) + 1;
+        SharedPreferences prefs = context.getSharedPreferences("phone.vishnu.statussaver", Context.MODE_PRIVATE);
+        int lastInt = (prefs.getInt("number", 0)) + 1;
 
         String file = root.toString() + File.separator + "StatusSaver" + lastInt + ".jpg";
 
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putInt("number", lastInt);
-        editor.apply();
+        prefs.edit().putInt("number", lastInt).apply();
 
         try {
             FileOutputStream fOutputStream = new FileOutputStream(file);
             BufferedOutputStream bos = new BufferedOutputStream(fOutputStream);
-
             image.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-
             fOutputStream.flush();
             fOutputStream.close();
-
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(context, "Save Failed", Toast.LENGTH_SHORT).show();
         }
-
-
+        MediaScannerConnection.scanFile(context, new String[]{file}, null, null);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
