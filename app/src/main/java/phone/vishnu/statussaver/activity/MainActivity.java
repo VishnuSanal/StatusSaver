@@ -68,10 +68,12 @@ public class MainActivity extends AppCompatActivity {
         File directory = new File(path);
         File[] files = directory.listFiles();
 
-        assert files != null;
         for (File file : files) {
 
             if (file.getName().toLowerCase().endsWith(".jpg")) {
+                String file_name = file.getPath();
+                filenames.add(file_name);
+            } else if (file.getName().toLowerCase().endsWith(".mp4")) {
                 String file_name = file.getPath();
                 filenames.add(file_name);
             }

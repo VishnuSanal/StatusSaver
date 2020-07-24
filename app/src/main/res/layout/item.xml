@@ -8,9 +8,9 @@
     android:focusable="true"
     android:longClickable="true"
     android:padding="4dp"
-    app:cardBackgroundColor="@android:color/holo_blue_bright"
     app:cardCornerRadius="4dp"
-    app:cardElevation="4dp">
+    app:cardElevation="4dp"
+    app:cardUseCompatPadding="true">
 
     <ImageView
         android:id="@+id/iv"
