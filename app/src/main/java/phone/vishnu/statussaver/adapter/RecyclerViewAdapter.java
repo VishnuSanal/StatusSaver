@@ -41,13 +41,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         this.arr = arr;
     }
 
-    @NonNull
-    @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(context).inflate(R.layout.item, parent, false);
-        return new ViewHolder(v);
-    }
-
     public static void copy(Context context, String src) throws IOException {
 
         File root = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "StatusSaver");
@@ -62,6 +55,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         prefs.edit().putInt("number", lastInt).apply();
 
         try (InputStream in = new FileInputStream(src)) {
+
             try (OutputStream out = new FileOutputStream(file)) {
                 // Transfer bytes from in to out
                 byte[] buf = new byte[1024];
@@ -69,10 +63,21 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 while ((len = in.read(buf)) > 0) {
                     out.write(buf, 0, len);
                 }
+                in.close();
+                out.close();
+            } finally {
+                in.close();
             }
         }
         MediaScannerConnection.scanFile(context, new String[]{file}, null, null);
 
+    }
+
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(context).inflate(R.layout.item, parent, false);
+        return new ViewHolder(v);
     }
 
     @Override
@@ -102,13 +107,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             e.printStackTrace();
         }
         MediaScannerConnection.scanFile(context, new String[]{file}, null, null);
-    }
-
-    class ViewHolder extends RecyclerView.ViewHolder {
-        ViewHolder(View itemView) {
-            super(itemView);
-            imageView = itemView.findViewById(R.id.iv);
-        }
     }
 
     @Override
@@ -148,6 +146,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                         copy(context, arr.get(position).toLowerCase());
                                     } catch (IOException e) {
                                         e.printStackTrace();
+                                    } finally {
+
                                     }
                                 }
                             }
@@ -165,5 +165,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             }
         });
 
+    }
+
+    class ViewHolder extends RecyclerView.ViewHolder {
+        ViewHolder(View itemView) {
+            super(itemView);
+            imageView = itemView.findViewById(R.id.iv);
+        }
     }
 }
