@@ -2,6 +2,7 @@ package phone.vishnu.statussaver.activity;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 
 import phone.vishnu.statussaver.R;
 import phone.vishnu.statussaver.adapter.RecyclerViewAdapter;
+import phone.vishnu.statussaver.fragment.DetailsFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -55,7 +57,15 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        RecyclerView.Adapter mAdapter = new RecyclerViewAdapter(this, FetchImages());
+        RecyclerViewAdapter mAdapter = new RecyclerViewAdapter(this, FetchImages());
+
+        mAdapter.setOnItemClickListener(new RecyclerViewAdapter.onItemClicked() {
+            @Override
+            public void onItemClicked(Bitmap bitmap, String path) {
+                getSupportFragmentManager().beginTransaction().add(R.id.container, DetailsFragment.newInstance(path, bitmap)).addToBackStack(null).commit();
+            }
+        });
+
         mRecyclerView.setAdapter(mAdapter);
     }
 
