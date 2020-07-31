@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
-    android:padding="8dp"
+    android:background="@color/colorPrimary"
     tools:context=".fragment.DetailsFragment"
     tools:ignore="HardcodedText">
 
@@ -32,7 +31,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/bottom_button_background"
         android:text="Cancel"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/saveButton"
         app:layout_constraintStart_toStartOf="parent"
@@ -44,7 +43,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/bottom_button_background"
         android:text="Save"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/cancelButton"

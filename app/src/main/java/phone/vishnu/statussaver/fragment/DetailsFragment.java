@@ -2,7 +2,6 @@ package phone.vishnu.statussaver.fragment;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.media.MediaScannerConnection;
@@ -66,7 +65,7 @@ public class DetailsFragment extends Fragment {
                             else copy(getActivity(), path);
 
                             progressDialog.dismiss();
-                            startActivity(new Intent(getActivity(), MainActivity.class));
+                            ((MainActivity) getActivity()).onBackPressed();
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -79,7 +78,7 @@ public class DetailsFragment extends Fragment {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getActivity(), MainActivity.class));
+                ((MainActivity) getActivity()).onBackPressed();
             }
         });
 

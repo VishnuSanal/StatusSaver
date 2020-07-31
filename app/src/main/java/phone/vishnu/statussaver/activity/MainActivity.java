@@ -25,13 +25,13 @@ import phone.vishnu.statussaver.fragment.DetailsFragment;
 
 public class MainActivity extends AppCompatActivity {
 
-    private RecyclerView mRecyclerView;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mRecyclerView = findViewById(R.id.recyclerView);
+        recyclerView = findViewById(R.id.recyclerView);
 
         askForPermission();
         setUpRecyclerView();
@@ -52,42 +52,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setUpRecyclerView() {
-        mRecyclerView.setHasFixedSize(true);
+        recyclerView.setHasFixedSize(true);
 
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
-        mRecyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setLayoutManager(mLayoutManager);
 
-        RecyclerViewAdapter mAdapter = new RecyclerViewAdapter(this, FetchImages());
+        ArrayList<String> imagePathList = fetchImages();
+        RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(this, imagePathList);
 
-        mAdapter.setOnItemClickListener(new RecyclerViewAdapter.onItemClicked() {
+        recyclerViewAdapter.setOnItemClickListener(new RecyclerViewAdapter.onItemClicked() {
             @Override
             public void onItemClicked(Bitmap bitmap, String path) {
                 getSupportFragmentManager().beginTransaction().add(R.id.container, DetailsFragment.newInstance(path, bitmap)).addToBackStack(null).commit();
             }
         });
 
-        mRecyclerView.setAdapter(mAdapter);
+        recyclerView.setAdapter(recyclerViewAdapter);
     }
 
-    private ArrayList<String> FetchImages() {
-
+    private ArrayList<String> fetchImages() {
         ArrayList<String> filenames = new ArrayList<>();
-
         String path = Environment.getExternalStorageDirectory() + File.separator + "WhatsApp" + File.separator + "Media" + File.separator + ".Statuses" + File.separator;
-
-        File directory = new File(path);
-        File[] files = directory.listFiles();
-
-        for (File file : files) {
-
-            if (file.getName().toLowerCase().endsWith(".jpg")) {
-                String file_name = file.getPath();
-                filenames.add(file_name);
-            } else if (file.getName().toLowerCase().endsWith(".mp4")) {
-                String file_name = file.getPath();
-                filenames.add(file_name);
-            }
-        }
+        File[] files = new File(path).listFiles();
+        for (File file : files) filenames.add(file.getPath());
         return filenames;
     }
 
