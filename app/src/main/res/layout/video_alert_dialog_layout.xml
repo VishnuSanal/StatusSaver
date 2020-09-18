@@ -8,37 +8,37 @@
     android:background="@android:color/transparent"
     tools:ignore="HardcodedText">
 
-    <ImageView
-        android:id="@+id/imageDialogImageVIew"
+    <VideoView
+        android:id="@+id/videoDialogVideoView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/imageDialogGuideLine"
+        app:layout_constraintBottom_toTopOf="@id/videoDialogGuideLine"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="ContentDescription" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/imageDialogGuideLine"
+        android:id="@+id/videoDialogGuideLine"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.8" />
 
     <Button
-        android:id="@+id/imageDialogCancelButton"
+        android:id="@+id/videoDialogCancelButton"
         style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:text="Back"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/imageDialogAcceptButton"
+        app:layout_constraintEnd_toStartOf="@id/videoDialogAcceptButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imageDialogGuideLine" />
+        app:layout_constraintTop_toBottomOf="@id/videoDialogGuideLine" />
 
     <Button
-        android:id="@+id/imageDialogAcceptButton"
+        android:id="@+id/videoDialogAcceptButton"
         style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -46,7 +46,7 @@
         android:text="Save"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/imageDialogCancelButton"
-        app:layout_constraintTop_toBottomOf="@id/imageDialogGuideLine" />
+        app:layout_constraintStart_toEndOf="@id/videoDialogCancelButton"
+        app:layout_constraintTop_toBottomOf="@id/videoDialogGuideLine" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

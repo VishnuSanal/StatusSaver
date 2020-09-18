@@ -9,13 +9,17 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -38,6 +42,8 @@ import java.util.Objects;
 
 import phone.vishnu.statussaver.R;
 import phone.vishnu.statussaver.adapter.RecyclerViewAdapter;
+import phone.vishnu.statussaver.fragment.AboutFragment;
+import phone.vishnu.statussaver.fragment.HistoryFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -48,8 +54,6 @@ public class MainActivity extends AppCompatActivity {
 
         if (!isPermissionGranted(Manifest.permission.READ_EXTERNAL_STORAGE, 1))
             isPermissionGranted(Manifest.permission.READ_EXTERNAL_STORAGE, 1);
-
-        fetchImages();
 
         setUpRecyclerView();
 
@@ -76,41 +80,85 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(final String path) {
 
-                final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+                if (path.endsWith(".jpg")) {
 
-                final View inflate = MainActivity.this.getLayoutInflater().inflate(R.layout.image_alert_dialog_layout, null);
+                    final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
 
-                alertDialogBuilder.setView(inflate);
+                    final View inflate = MainActivity.this.getLayoutInflater().inflate(R.layout.image_alert_dialog_layout, null);
 
-                final AlertDialog alertDialog = alertDialogBuilder.create();
-                Objects.requireNonNull(alertDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-                alertDialog.setCancelable(true);
+                    alertDialogBuilder.setView(inflate);
 
-                Glide.with(MainActivity.this)
-                        .load(path)
-                        .centerCrop()
-                        .into((ImageView) inflate.findViewById(R.id.dialogImageVIew));
+                    final AlertDialog alertDialog = alertDialogBuilder.create();
+                    Objects.requireNonNull(alertDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                    alertDialog.setCancelable(true);
 
-                inflate.findViewById(R.id.dialogCancelButton).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        alertDialog.dismiss();
-                    }
-                });
+                    Glide.with(MainActivity.this)
+                            .load(path)
+                            .centerCrop()
+                            .into((ImageView) inflate.findViewById(R.id.imageDialogImageVIew));
 
-                inflate.findViewById(R.id.dialogAcceptButton).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                    inflate.findViewById(R.id.imageDialogCancelButton).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            alertDialog.dismiss();
+                        }
+                    });
 
-                        if (!isPermissionGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE, 2))
-                            isPermissionGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE, 2);
+                    inflate.findViewById(R.id.imageDialogAcceptButton).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
 
-                        new SaveAsyncTask().execute(path);
-                        alertDialog.dismiss();
+                            if (!isPermissionGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE, 2))
+                                isPermissionGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE, 2);
 
-                    }
-                });
-                alertDialog.show();
+                            new SaveAsyncTask().execute(path);
+                            alertDialog.dismiss();
+
+                        }
+                    });
+                    alertDialog.setCancelable(true);
+                    alertDialog.show();
+
+
+                } else if (path.endsWith(".mp4")) {
+                    final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+
+                    final View inflate = MainActivity.this.getLayoutInflater().inflate(R.layout.video_alert_dialog_layout, null);
+
+                    alertDialogBuilder.setView(inflate);
+
+                    final AlertDialog alertDialog = alertDialogBuilder.create();
+                    Objects.requireNonNull(alertDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                    alertDialog.setCancelable(true);
+
+                    VideoView videoView = inflate.findViewById(R.id.videoDialogVideoView);
+                    videoView.setVideoURI(Uri.parse(path));
+                    videoView.requestFocus();
+                    videoView.start();
+
+                    inflate.findViewById(R.id.videoDialogCancelButton).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            alertDialog.dismiss();
+                        }
+                    });
+
+                    inflate.findViewById(R.id.videoDialogAcceptButton).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            if (!isPermissionGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE, 2))
+                                isPermissionGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE, 2);
+
+                            new SaveAsyncTask().execute(path);
+                            alertDialog.dismiss();
+
+                        }
+                    });
+                    alertDialog.setCancelable(true);
+                    alertDialog.show();
+
+                }
             }
         });
     }
@@ -168,19 +216,42 @@ public class MainActivity extends AppCompatActivity {
         builder.setCancelable(true);
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
+            public void onClick(DialogInterface imageDialog, int which) {
+                imageDialog.cancel();
                 ActivityCompat.requestPermissions(MainActivity.this, new String[]{PERMISSION}, PERMISSION_REQ_CODE);
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
+            public void onClick(DialogInterface imageDialog, int which) {
+                imageDialog.cancel();
             }
         });
         builder.show();
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_about: {
+                if (getSupportFragmentManager().getBackStackEntryCount() == 0)
+                    getSupportFragmentManager().beginTransaction().add(R.id.constraintLayout, AboutFragment.newInstance()).addToBackStack(null).commit();
+                break;
+            }
+            case R.id.menu_history: {
+                if (getSupportFragmentManager().getBackStackEntryCount() == 0)
+                    getSupportFragmentManager().beginTransaction().add(R.id.constraintLayout, HistoryFragment.newInstance()).addToBackStack(null).commit();
+                break;
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private class SaveAsyncTask extends AsyncTask<String, Integer, Boolean> {
@@ -237,4 +308,6 @@ public class MainActivity extends AppCompatActivity {
             p.dismiss();
         }
     }
+
+
 }
