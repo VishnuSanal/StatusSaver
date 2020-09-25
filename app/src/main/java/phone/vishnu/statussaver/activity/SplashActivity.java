@@ -6,6 +6,8 @@ import android.os.Handler;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.Objects;
+
 import phone.vishnu.statussaver.R;
 
 public class SplashActivity extends AppCompatActivity {
@@ -14,7 +16,7 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-
+        Objects.requireNonNull(getSupportActionBar()).hide();
         initTasks();
     }
 

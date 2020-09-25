@@ -3,9 +3,7 @@ package phone.vishnu.statussaver.activity;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.media.MediaScannerConnection;
@@ -40,6 +38,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import phone.vishnu.statussaver.BooleanItem;
 import phone.vishnu.statussaver.R;
 import phone.vishnu.statussaver.adapter.RecyclerViewAdapter;
 import phone.vishnu.statussaver.fragment.AboutFragment;
@@ -177,21 +176,6 @@ public class MainActivity extends AppCompatActivity {
         return fileNameList;
     }
 
-    private String getFilePath() {
-        File root = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "StatusSaver");
-
-        if (!root.exists()) //noinspection ResultOfMethodCallIgnored
-            root.mkdirs();
-
-        SharedPreferences prefs = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
-        int lastInt = (prefs.getInt("lastInt", 0)) + 1;
-
-        String file = root.toString() + File.separator + "StatusSaver" + lastInt;
-
-        prefs.edit().putInt("lastInt", lastInt).apply();
-        return file;
-    }
-
     private boolean isPermissionGranted(String PERMISSION, int PERMISSION_REQ_CODE) {
         if (Build.VERSION.SDK_INT >= 22) {
             if (ContextCompat.checkSelfPermission(MainActivity.this, PERMISSION) != PackageManager.PERMISSION_GRANTED) {
@@ -254,7 +238,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private class SaveAsyncTask extends AsyncTask<String, Integer, Boolean> {
+    private class SaveAsyncTask extends AsyncTask<String, Integer, BooleanItem> {
 
         ProgressDialog p;
 
@@ -269,9 +253,16 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        protected Boolean doInBackground(String... strings) {
+        protected BooleanItem doInBackground(String... strings) {
 
-            String filePath = strings[0].endsWith(".jpg") ? (getFilePath() + ".jpg") : (getFilePath() + ".mp4");
+            File root = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "StatusSaver");
+
+            if (!root.exists()) //noinspection ResultOfMethodCallIgnored
+                root.mkdirs();
+
+            String filePath = root.toString() + File.separator + Uri.fromFile(new File(strings[0])).getLastPathSegment();
+
+            if (new File(filePath).exists()) return new BooleanItem(true, false);
 
             try (InputStream in = new FileInputStream(strings[0])) {
 
@@ -288,26 +279,27 @@ public class MainActivity extends AppCompatActivity {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
-                return false;
+                return new BooleanItem(false, false);
             }
 
             MediaScannerConnection.scanFile(MainActivity.this, new String[]{filePath}, null, null);
 
-            return true;
+            return new BooleanItem(false, true);
         }
 
         @Override
-        protected void onPostExecute(Boolean isDone) {
-            super.onPostExecute(isDone);
+        protected void onPostExecute(BooleanItem booleanItem) {
+            super.onPostExecute(booleanItem);
 
-            if (isDone) {
-                Toast.makeText(MainActivity.this, "Saved", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(MainActivity.this, "Error", Toast.LENGTH_SHORT).show();
+            if (booleanItem.alreadyExists())
+                Toast.makeText(MainActivity.this, "Status Already Saved", Toast.LENGTH_SHORT).show();
+            else {
+                if (booleanItem.isDone())
+                    Toast.makeText(MainActivity.this, "Saved", Toast.LENGTH_SHORT).show();
+                else
+                    Toast.makeText(MainActivity.this, "Error", Toast.LENGTH_SHORT).show();
             }
             p.dismiss();
         }
     }
-
-
 }
