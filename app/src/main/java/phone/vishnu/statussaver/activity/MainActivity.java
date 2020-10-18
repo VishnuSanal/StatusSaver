@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -44,22 +45,26 @@ import phone.vishnu.statussaver.adapter.RecyclerViewAdapter;
 import phone.vishnu.statussaver.fragment.AboutFragment;
 import phone.vishnu.statussaver.fragment.HistoryFragment;
 
+@SuppressWarnings("SameParameterValue")
 public class MainActivity extends AppCompatActivity {
+
+    private RecyclerView recyclerView;
+    private RecyclerViewAdapter recyclerViewAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (!isPermissionGranted(Manifest.permission.READ_EXTERNAL_STORAGE, 1))
-            isPermissionGranted(Manifest.permission.READ_EXTERNAL_STORAGE, 1);
-
-        setUpRecyclerView();
+        if (!isPermissionGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE))
+            askPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, 1);
+        else
+            setUpRecyclerView();
 
     }
 
     private void setUpRecyclerView() {
-        final RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        recyclerView = findViewById(R.id.recyclerView);
 
         RecyclerView.LayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(gridLayoutManager);
@@ -69,12 +74,11 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.addItemDecoration(new DividerItemDecoration(this, GridLayoutManager.HORIZONTAL));
         recyclerView.addItemDecoration(new DividerItemDecoration(this, GridLayoutManager.VERTICAL));
 
-        final RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter();
+        recyclerViewAdapter = new RecyclerViewAdapter();
         recyclerView.setAdapter(recyclerViewAdapter);
 
         ArrayList<String> uriArrayList = fetchImages();
         recyclerViewAdapter.submitList(uriArrayList);
-
         recyclerViewAdapter.setOnItemClickListener(new RecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(final String path) {
@@ -107,10 +111,11 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View v) {
 
-                            if (!isPermissionGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE, 2))
-                                isPermissionGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE, 2);
+                            if (isPermissionGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE))
+                                new SaveAsyncTask().execute(path);
+                            else
+                                askPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, 2);
 
-                            new SaveAsyncTask().execute(path);
                             alertDialog.dismiss();
 
                         }
@@ -146,10 +151,10 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View v) {
 
-                            if (!isPermissionGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE, 2))
-                                isPermissionGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE, 2);
-
-                            new SaveAsyncTask().execute(path);
+                            if (isPermissionGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE))
+                                new SaveAsyncTask().execute(path);
+                            else
+                                askPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, 2);
                             alertDialog.dismiss();
 
                         }
@@ -176,19 +181,14 @@ public class MainActivity extends AppCompatActivity {
         return fileNameList;
     }
 
-    private boolean isPermissionGranted(String PERMISSION, int PERMISSION_REQ_CODE) {
+    private boolean isPermissionGranted(String PERMISSION) {
+        return ContextCompat.checkSelfPermission(MainActivity.this, PERMISSION) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void askPermission(String PERMISSION, int PERMISSION_REQ_CODE) {
         if (Build.VERSION.SDK_INT >= 22) {
-            if (ContextCompat.checkSelfPermission(MainActivity.this, PERMISSION) != PackageManager.PERMISSION_GRANTED) {
-                if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, PERMISSION)) {
-                    showPermissionDeniedDialog(PERMISSION, PERMISSION_REQ_CODE);
-                } else {
-                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{PERMISSION}, PERMISSION_REQ_CODE);
-                }
-            } else {
-                return true;
-            }
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{PERMISSION}, PERMISSION_REQ_CODE);
         }
-        return false;
     }
 
     private void showPermissionDeniedDialog(final String PERMISSION, final int PERMISSION_REQ_CODE) {
@@ -209,6 +209,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface imageDialog, int which) {
                 imageDialog.cancel();
+                finish();
             }
         });
         builder.show();
@@ -234,8 +235,27 @@ public class MainActivity extends AppCompatActivity {
                     getSupportFragmentManager().beginTransaction().add(R.id.constraintLayout, HistoryFragment.newInstance()).addToBackStack(null).commit();
                 break;
             }
+            case R.id.menu_refresh: {
+                if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+                    {
+                        ArrayList<String> uriArrayList = fetchImages();
+                        recyclerViewAdapter.submitList(uriArrayList);
+                        recyclerViewAdapter.notifyDataSetChanged();
+                    }
+                }
+            }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        if (requestCode == 1 && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+            setUpRecyclerView();
+        else {
+            showPermissionDeniedDialog(permissions[0], requestCode);
+        }
     }
 
     private class SaveAsyncTask extends AsyncTask<String, Integer, BooleanItem> {

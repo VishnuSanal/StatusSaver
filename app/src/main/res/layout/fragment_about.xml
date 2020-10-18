@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
+    android:background="@color/BGColor"
     android:paddingTop="16dp"
     tools:context=".fragment.AboutFragment">
 
@@ -22,7 +22,7 @@
             android:layout_marginBottom="16dp"
             android:contentDescription="@string/app_name"
             android:scaleType="fitXY"
-            android:src="@drawable/ic_drawing"
+            android:src="@drawable/ic_statussaver"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -35,7 +35,7 @@
             android:layout_marginTop="24dp"
             android:fontFamily="casual"
             android:text="@string/app_name"
-            android:textColor="@color/textColor"
+            android:textColor="@color/colorAccent"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -63,34 +63,36 @@
             android:layout_gravity="start"
             android:layout_margin="16dp"
             android:text="@string/links"
-            android:textColor="@color/textColor"
+            android:textColor="@color/colorAccent"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/aboutSampleSpacerView" />
 
         <TextView
             android:id="@+id/aboutPageFeedbackTextView"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
+            android:background="?attr/selectableItemBackground"
             android:clickable="true"
             android:focusable="true"
             android:padding="16dp"
             android:text="@string/send_feedback_to_developer"
-            android:textColor="@android:color/background_dark"
+            android:textColor="@color/textColor"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/aboutPageLinksTextView" />
 
         <TextView
             android:id="@+id/aboutPageViewSourceCodeTextView"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
+            android:background="?attr/selectableItemBackground"
             android:clickable="true"
             android:focusable="true"
             android:padding="16dp"
             android:text="@string/view_source_code_at_github"
-            android:textColor="@android:color/background_dark"
+            android:textColor="@color/textColor"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/aboutPageFeedbackTextView" />
 
@@ -102,7 +104,7 @@
             android:layout_gravity="start"
             android:layout_margin="16dp"
             android:text="@string/thanks_to"
-            android:textColor="@color/textColor"
+            android:textColor="@color/colorAccent"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/aboutPageViewSourceCodeTextView" />
@@ -116,7 +118,7 @@
             android:paddingTop="8dp"
             android:paddingEnd="16dp"
             android:text="Aswin Kesav.U"
-            android:textColor="@android:color/background_dark"
+            android:textColor="@color/textColor"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/aboutPageCreditsTextView"
             tools:ignore="HardcodedText" />
@@ -130,7 +132,7 @@
             android:paddingTop="8dp"
             android:paddingEnd="16dp"
             android:text="Vasudevan.T"
-            android:textColor="@android:color/background_dark"
+            android:textColor="@color/textColor"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/aboutPageCredit1TextView"
             tools:ignore="HardcodedText" />
@@ -140,8 +142,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:text="@string/version"
-            android:textColor="@color/textColor"
+            android:textColor="@color/colorAccent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

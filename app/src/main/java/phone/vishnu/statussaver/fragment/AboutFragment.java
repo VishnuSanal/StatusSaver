@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import phone.vishnu.statussaver.BuildConfig;
 import phone.vishnu.statussaver.R;
 
 public class AboutFragment extends Fragment {
@@ -49,6 +50,7 @@ public class AboutFragment extends Fragment {
         View inflate = inflater.inflate(R.layout.fragment_about, container, false);
         sourceCodeTV = inflate.findViewById(R.id.aboutPageViewSourceCodeTextView);
         feedbackTV = inflate.findViewById(R.id.aboutPageFeedbackTextView);
+        ((TextView) inflate.findViewById(R.id.aboutSampleVersion)).setText(String.format("Version: %s", BuildConfig.VERSION_NAME));
         return inflate;
     }
 

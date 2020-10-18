@@ -6,6 +6,6 @@
 
     <color name="spacerColor">#BDBDBD</color>
 
-    <color name="BGColor">#FFFFFF</color>
-    <color name="textColor">#000000</color>
+    <color name="BGColor">#000000</color>
+    <color name="textColor">#FFFFFF</color>
 </resources>
