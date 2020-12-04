@@ -1,6 +1,7 @@
 package phone.vishnu.statussaver.fragment;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,7 +9,9 @@ import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import androidx.fragment.app.Fragment;
@@ -83,6 +86,9 @@ public class HistoryFragment extends Fragment {
                             .centerCrop()
                             .into((ImageView) inflate.findViewById(R.id.imageDialogImageVIew));
 
+                    ((Button) inflate.findViewById(R.id.imageDialogAcceptButton)).setText("Delete");
+                    inflate.findViewById(R.id.imageDialogShareButton).setVisibility(View.GONE);
+
                     inflate.findViewById(R.id.imageDialogCancelButton).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -90,7 +96,15 @@ public class HistoryFragment extends Fragment {
                         }
                     });
 
-                    inflate.findViewById(R.id.imageDialogAcceptButton).setVisibility(View.GONE);
+                    inflate.findViewById(R.id.imageDialogAcceptButton).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            alertDialog.dismiss();
+                            deleteFile(path);
+//                            recyclerViewAdapter.notifyDataSetChanged();
+                        }
+                    });
+
                     alertDialog.setCancelable(true);
                     alertDialog.show();
 
@@ -106,6 +120,9 @@ public class HistoryFragment extends Fragment {
                     Objects.requireNonNull(alertDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                     alertDialog.setCancelable(true);
 
+                    ((Button) inflate.findViewById(R.id.videoDialogAcceptButton)).setText("Delete");
+                    inflate.findViewById(R.id.videoDialogShareButton).setVisibility(View.GONE);
+
                     VideoView videoView = inflate.findViewById(R.id.videoDialogVideoView);
                     videoView.setVideoURI(Uri.parse(path));
                     videoView.requestFocus();
@@ -118,14 +135,31 @@ public class HistoryFragment extends Fragment {
                         }
                     });
 
-                    inflate.findViewById(R.id.videoDialogAcceptButton).setVisibility(View.GONE);
+                    inflate.findViewById(R.id.videoDialogAcceptButton).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            alertDialog.dismiss();
+                            deleteFile(path);
+//                            recyclerViewAdapter.notifyDataSetChanged();
+                        }
+                    });
                     alertDialog.setCancelable(true);
                     alertDialog.show();
 
                 }
             }
         });
+    }
 
+    private void deleteFile(String path) {
+        try {
+            new File(path).delete();
+            Toast.makeText(requireContext(), "Deleted", Toast.LENGTH_SHORT).show();
+            requireContext().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File(path))));
+            recyclerView.getAdapter().notifyDataSetChanged();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private ArrayList<String> fetchImages() {

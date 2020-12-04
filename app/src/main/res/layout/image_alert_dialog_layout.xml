@@ -33,8 +33,20 @@
         android:layout_margin="8dp"
         android:text="Back"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/imageDialogAcceptButton"
+        app:layout_constraintEnd_toStartOf="@id/imageDialogShareButton"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imageDialogGuideLine" />
+
+    <Button
+        android:id="@+id/imageDialogShareButton"
+        style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:text="Share"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/imageDialogAcceptButton"
+        app:layout_constraintStart_toEndOf="@id/imageDialogCancelButton"
         app:layout_constraintTop_toBottomOf="@id/imageDialogGuideLine" />
 
     <Button
@@ -46,7 +58,7 @@
         android:text="Save"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/imageDialogCancelButton"
+        app:layout_constraintStart_toEndOf="@id/imageDialogShareButton"
         app:layout_constraintTop_toBottomOf="@id/imageDialogGuideLine" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
