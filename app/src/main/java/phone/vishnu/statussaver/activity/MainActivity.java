@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.media.MediaPlayer;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -16,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.Toast;
 import android.widget.VideoView;
 
@@ -53,6 +55,8 @@ import phone.vishnu.statussaver.fragment.HistoryFragment;
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerViewAdapter recyclerViewAdapter;
+    private VideoView videoView;
+    private SeekBar seekBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -199,10 +203,49 @@ public class MainActivity extends AppCompatActivity {
                     Objects.requireNonNull(alertDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                     alertDialog.setCancelable(true);
 
-                    VideoView videoView = inflate.findViewById(R.id.videoDialogVideoView);
+                    videoView = inflate.findViewById(R.id.videoDialogVideoView);
+                    seekBar = inflate.findViewById(R.id.videoDialogSeekBar);
+
                     videoView.setVideoURI(Uri.parse(path));
                     videoView.requestFocus();
+                    videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                        @Override
+                        public void onPrepared(MediaPlayer mp) {
+                            seekBar.setMax(videoView.getDuration());
+                            seekBar.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (seekBar != null) {
+                                        seekBar.setProgress(videoView.getCurrentPosition());
+                                    }
+
+                                    if (videoView.isPlaying()) {
+                                        seekBar.postDelayed(this, 100);
+                                    }
+                                }
+                            }, 100);
+                        }
+                    });
                     videoView.start();
+
+                    seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                        @Override
+                        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                            if (fromUser)
+                                videoView.seekTo(progress);
+                        }
+
+                        @Override
+                        public void onStartTrackingTouch(SeekBar seekBar) {
+//                            videoView.pause();
+                        }
+
+                        @Override
+                        public void onStopTrackingTouch(SeekBar seekBar) {
+                            videoView.seekTo(seekBar.getProgress());
+//                            videoView.start();
+                        }
+                    });
 
                     inflate.findViewById(R.id.videoDialogCancelButton).setOnClickListener(new View.OnClickListener() {
                         @Override

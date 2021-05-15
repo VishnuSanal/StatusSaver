@@ -42,6 +42,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/aboutPageAppLogo" />
 
+        <TextView
+            android:id="@+id/aboutSampleVersion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:fontFamily="serif"
+            android:textColor="@color/textColor"
+            app:layout_constraintEnd_toEndOf="@id/aboutSampleAppNameTextView"
+            app:layout_constraintStart_toStartOf="@id/aboutSampleAppNameTextView"
+            app:layout_constraintTop_toBottomOf="@id/aboutSampleAppNameTextView"
+            tools:text="Version 1.12.1" />
+
         <View
             android:id="@+id/aboutSampleSpacerView"
             android:layout_width="match_parent"
@@ -53,8 +65,7 @@
             android:background="@color/spacerColor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/aboutSampleAppNameTextView" />
-
+            app:layout_constraintTop_toBottomOf="@id/aboutSampleVersion" />
 
         <TextView
             android:id="@+id/aboutPageLinksTextView"
@@ -65,11 +76,14 @@
             android:text="@string/links"
             android:textColor="@color/colorAccent"
             android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@id/aboutPageRateTextView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/aboutSampleSpacerView" />
 
         <TextView
-            android:id="@+id/aboutPageFeedbackTextView"
+            android:id="@+id/aboutPageRateTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
@@ -77,8 +91,10 @@
             android:clickable="true"
             android:focusable="true"
             android:padding="16dp"
-            android:text="@string/send_feedback_to_developer"
+            android:text="@string/rate_this_app_on_google_play"
             android:textColor="@color/textColor"
+            app:layout_constraintBottom_toTopOf="@id/aboutPageViewSourceCodeTextView"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/aboutPageLinksTextView" />
 
@@ -91,61 +107,27 @@
             android:clickable="true"
             android:focusable="true"
             android:padding="16dp"
-            android:text="@string/view_source_code_at_github"
+            android:text="@string/view_source_code_on_github"
             android:textColor="@color/textColor"
+            app:layout_constraintBottom_toTopOf="@id/aboutPageFeedbackTextView"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/aboutPageFeedbackTextView" />
-
+            app:layout_constraintTop_toBottomOf="@id/aboutPageRateTextView" />
 
         <TextView
-            android:id="@+id/aboutPageCreditsTextView"
-            android:layout_width="wrap_content"
+            android:id="@+id/aboutPageFeedbackTextView"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:layout_margin="16dp"
-            android:text="@string/thanks_to"
-            android:textColor="@color/colorAccent"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/aboutPageViewSourceCodeTextView" />
-
-        <TextView
-            android:id="@+id/aboutPageCredit1TextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:paddingStart="16dp"
-            android:paddingTop="8dp"
-            android:paddingEnd="16dp"
-            android:text="Aswin Kesav.U"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="16dp"
+            android:text="@string/send_feedback_to_the_developer"
             android:textColor="@color/textColor"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/aboutPageCreditsTextView"
-            tools:ignore="HardcodedText" />
-
-        <TextView
-            android:id="@+id/aboutPageCredit2TextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:paddingStart="16dp"
-            android:paddingTop="8dp"
-            android:paddingEnd="16dp"
-            android:text="Vasudevan.T"
-            android:textColor="@color/textColor"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/aboutPageCredit1TextView"
-            tools:ignore="HardcodedText" />
-
-        <TextView
-            android:id="@+id/aboutSampleVersion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:textColor="@color/colorAccent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/aboutPageCredit2TextView" />
+            app:layout_constraintTop_toBottomOf="@id/aboutPageViewSourceCodeTextView" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
