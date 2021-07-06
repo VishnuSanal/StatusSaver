@@ -18,7 +18,7 @@ import phone.vishnu.statussaver.R;
 
 public class AboutFragment extends Fragment {
 
-    private TextView sourceCodeTV, feedbackTV, rateTV;
+    private TextView sourceCodeTV, rateTV;
 
     public AboutFragment() {
         // Required empty public constructor
@@ -32,7 +32,6 @@ public class AboutFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View inflate = inflater.inflate(R.layout.fragment_about, container, false);
         sourceCodeTV = inflate.findViewById(R.id.aboutPageViewSourceCodeTextView);
-        feedbackTV = inflate.findViewById(R.id.aboutPageFeedbackTextView);
         rateTV = inflate.findViewById(R.id.aboutPageRateTextView);
         ((TextView) inflate.findViewById(R.id.aboutSampleVersion)).setText(String.format("Version %s", BuildConfig.VERSION_NAME));
         return inflate;
@@ -45,7 +44,6 @@ public class AboutFragment extends Fragment {
             Uri uriUrl = Uri.parse("https://github.com/VishnuSanal/StatusSaver");
             startActivity(new Intent(Intent.ACTION_VIEW, uriUrl));
         });
-        feedbackTV.setOnClickListener(v -> composeEmail(new String[]{requireContext().getString(R.string.email_address_of_developer)}, "Feedback of " + requireContext().getString(R.string.app_name)));
         rateTV.setOnClickListener(v -> {
 
             Uri uriUrl = Uri.parse("market://details?id=" + requireContext().getPackageName());
@@ -64,15 +62,5 @@ public class AboutFragment extends Fragment {
                                 Uri.parse("http://play.google.com/store/apps/details?id=" + requireContext().getPackageName())));
             }
         });
-    }
-
-    private void composeEmail(String[] addresses, String subject) {
-        Intent intent = new Intent(Intent.ACTION_SENDTO);
-        intent.setData(Uri.parse("mailto:")); // only email apps should handle this
-        intent.putExtra(Intent.EXTRA_EMAIL, addresses);
-        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
-        if (intent.resolveActivity(requireActivity().getPackageManager()) != null) {
-            startActivity(intent);
-        }
     }
 }

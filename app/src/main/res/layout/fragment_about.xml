@@ -109,25 +109,10 @@
             android:padding="16dp"
             android:text="@string/view_source_code_on_github"
             android:textColor="@color/textColor"
-            app:layout_constraintBottom_toTopOf="@id/aboutPageFeedbackTextView"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/aboutPageRateTextView" />
 
-        <TextView
-            android:id="@+id/aboutPageFeedbackTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true"
-            android:padding="16dp"
-            android:text="@string/send_feedback_to_the_developer"
-            android:textColor="@color/textColor"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/aboutPageViewSourceCodeTextView" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
